@@ -29,6 +29,14 @@ func NewGame(width, height int, seed int64) *Game {
 	return &game
 }
 
+func (g *Game) GetSnakeHead() (int, int) {
+	return g.snake[0].x, g.snake[0].y
+}
+
+func (g *Game) GetFood() (int, int) {
+	return g.food.x, g.food.y
+}
+
 func (g *Game) GetCells() [][]Cell {
 	cells := [][]Cell{}
 	for y := 0; y < g.size.y; y++ {
