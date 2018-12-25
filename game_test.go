@@ -6,6 +6,33 @@ import (
 	"testing"
 )
 
+func TestGetCells(t *testing.T) {
+	tests := []struct {
+		game     Game
+		expected [][]Cell
+	}{
+		{
+			Game{
+				snake: []vector{vector{0, 0}},
+				size:  vector{2, 2},
+				food:  vector{1, 1},
+			},
+			[][]Cell{
+				[]Cell{SnakeCell, EmptyCell},
+				[]Cell{EmptyCell, FoodCell},
+			},
+		},
+	}
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			output := test.game.GetCells()
+			if !reflect.DeepEqual(test.expected, output) {
+				t.Error("incorrect output")
+			}
+		})
+	}
+}
+
 func TestGetEmptyCells(t *testing.T) {
 	tests := []struct {
 		snake    []vector

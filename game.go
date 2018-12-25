@@ -2,6 +2,14 @@ package snake
 
 import "math/rand"
 
+type Cell int
+
+const (
+	EmptyCell Cell = iota
+	SnakeCell
+	FoodCell
+)
+
 // Game represents a single snake game
 type Game struct {
 	snake
@@ -19,6 +27,24 @@ func NewGame(width, height int, seed int64) *Game {
 	}
 	game.spawnFood()
 	return &game
+}
+
+func (g *Game) GetCells() [][]Cell {
+	cells := [][]Cell{}
+	for y := 0; y < g.size.y; y++ {
+		row := []Cell{}
+		for x := 0; x < g.size.x; x++ {
+			if g.food.x == x && g.food.y == y {
+				row = append(row, FoodCell)
+			} else if snakeContainsCell(x, y, g.snake) {
+				row = append(row, SnakeCell)
+			} else {
+				row = append(row, EmptyCell)
+			}
+		}
+		cells = append(cells, row)
+	}
+	return cells
 }
 
 // Update updates the game state by one move and returns whether the is snake alive
