@@ -15,7 +15,8 @@ const (
 	EmptyCell
 )
 
-type vector struct {
+// Vector represents a 2D position
+type Vector struct {
 	x int
 	y int
 }
@@ -23,18 +24,18 @@ type vector struct {
 // Game represents a single instance of a game of snake
 type Game struct {
 	// Snake stores the cells that the snake occupies
-	Snake []vector
+	Snake []Vector
 	// Food represents the position of the target food
-	Food   vector
-	bounds vector
+	Food   Vector
+	bounds Vector
 	prng   *rand.Rand
 }
 
 // NewGame initalises a new Game object
 func NewGame(width, height int, seed int64) *Game {
 	game := Game{
-		Snake:  []vector{vector{0, 0}},
-		bounds: vector{width, height},
+		Snake:  []Vector{Vector{0, 0}},
+		bounds: Vector{width, height},
 		prng:   rand.New(rand.NewSource(seed)),
 	}
 	game.spawnFood()
@@ -47,7 +48,7 @@ func GetGrid(game Game) [][]Cell {
 	for y := 0; y < game.bounds.y; y++ {
 		row := []Cell{}
 		for x := 0; x < game.bounds.x; x++ {
-			row = append(row, getCellType(vector{x, y}, game))
+			row = append(row, getCellType(Vector{x, y}, game))
 		}
 		grid = append(grid, row)
 	}
@@ -79,7 +80,7 @@ func (g *Game) update(dx, dy int) (alive bool) {
 	head := g.Snake[0]
 	head.x += dx
 	head.y += dy
-	g.Snake = append([]vector{head}, g.Snake...)
+	g.Snake = append([]Vector{head}, g.Snake...)
 	// check if eaten food
 	if head.x == g.Food.x && head.y == g.Food.y {
 		// has eaten food, spawn new food
@@ -92,23 +93,23 @@ func (g *Game) update(dx, dy int) (alive bool) {
 	return isInsideBounds(g.Snake[0], g.bounds) && !isVectorContainedIn(g.Snake[0], g.Snake[1:])
 }
 
-func isInsideBounds(vec vector, bounds vector) (alive bool) {
+func isInsideBounds(vec Vector, bounds Vector) (alive bool) {
 	return vec.x < 0 || vec.y < 0 || bounds.x <= vec.x || bounds.y <= vec.y
 }
 
 func (g *Game) spawnFood() {
-	emptyCells := []vector{}
+	emptyCells := []Vector{}
 	for y := 0; y < g.bounds.y; y++ {
 		for x := 0; x < g.bounds.x; x++ {
-			if !isVectorContainedIn(vector{x, y}, g.Snake) {
-				emptyCells = append(emptyCells, vector{x, y})
+			if !isVectorContainedIn(Vector{x, y}, g.Snake) {
+				emptyCells = append(emptyCells, Vector{x, y})
 			}
 		}
 	}
 	g.Food = emptyCells[g.prng.Intn(len(emptyCells))]
 }
 
-func getCellType(vec vector, game Game) Cell {
+func getCellType(vec Vector, game Game) Cell {
 	if vec.x == game.Food.x && vec.y == game.Food.y {
 		return FoodCell
 	}
@@ -121,7 +122,7 @@ func getCellType(vec vector, game Game) Cell {
 	return EmptyCell
 }
 
-func isVectorContainedIn(vec vector, vs []vector) bool {
+func isVectorContainedIn(vec Vector, vs []Vector) bool {
 	for _, v := range vs {
 		if vec.x == v.x && vec.y == v.y {
 			return true

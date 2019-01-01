@@ -8,14 +8,14 @@ import (
 
 func TestGetGrid(t *testing.T) {
 	game := Game{
-		Snake: []vector{
-			vector{0, 0},
-			vector{1, 0},
-			vector{1, 1},
-			vector{1, 2},
+		Snake: []Vector{
+			Vector{0, 0},
+			Vector{1, 0},
+			Vector{1, 1},
+			Vector{1, 2},
 		},
-		Food:   vector{2, 3},
-		bounds: vector{4, 4},
+		Food:   Vector{2, 3},
+		bounds: Vector{4, 4},
 	}
 	expected := [][]Cell{
 		[]Cell{SnakeHeadCell, SnakeBodyCell, EmptyCell, EmptyCell},
@@ -32,7 +32,7 @@ func TestGetGrid(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	tests := []struct {
 		operations func(*Game)
-		expected   []vector
+		expected   []Vector
 	}{
 		{
 			func(game *Game) {
@@ -41,7 +41,7 @@ func TestUpdate(t *testing.T) {
 				game.update(1, 0)
 				game.update(0, 1)
 			},
-			[]vector{vector{3, 1}},
+			[]Vector{Vector{3, 1}},
 		},
 		{
 			func(game *Game) {
@@ -50,7 +50,7 @@ func TestUpdate(t *testing.T) {
 				game.update(0, 1)
 				game.update(0, 1)
 			},
-			[]vector{vector{2, 2}, vector{2, 1}},
+			[]Vector{Vector{2, 2}, Vector{2, 1}},
 		},
 	}
 	for i, test := range tests {
